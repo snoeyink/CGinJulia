@@ -1,4 +1,4 @@
-@testset "basic 2d orientation tests" begin
+@testset "Basic 2D Orientation Tests" begin
     o = (0f0,0f0); x = (1,0); y = (0,1); p = (2,2); q = (3,4); r = (1f0,1f0);
     @test ccw(o,x,p) == ccw(o,x,toPoint2H(p))
     @test ccw(o,x,p) == ccw(o,toPoint2H(x),(p))

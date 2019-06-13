@@ -1,5 +1,7 @@
 """
-3D Vectors (x, y z), Planes (pw, px, py, pz)
+Adapted from 2D Types:
+Geometric predicates for 3D Vectors, cartesian points (px,py,pz), homogeneuos points (pw,px,py,pz), and planes
+    Julia can inline these.
 """
 Vector3 = Tuple{Real,Real,Real}
 Point3C = Tuple{Real,Real,Real}
