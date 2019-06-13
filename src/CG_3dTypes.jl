@@ -21,7 +21,7 @@ det3(p,q,r,a,b,c)::Real = p[a]*det2(q,r,b,c) -
                           p[c]*det2(q,r,a,b)
 
 # computing homogeneous plane equations
-plane(o::Point3C,p::Point3C,q::Point3C,r::Point3C)::Plane3 = (det3(p,q,r,2,3,4),
+plane(o::Point3H,p::Point3H,q::Point3H,r::Point3H)::Plane3 = (det3(p,q,r,2,3,4),
                                                              -det3(o,q,r,1,3,4),
                                                              det3(o,p,r,1,2,4),
                                                              -det3(o,p,q,1,2,3))
