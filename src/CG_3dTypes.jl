@@ -31,8 +31,31 @@ orientptpl((w,x,y,z)::Point3H,(pw,px,py,pz)::Plane3) = muladd(px,x,muladd(py,y,m
 abovePl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)>zero(p[1])
 belowPl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)<zero(p[1])
 
-function CH(p::AbstractVector{Point3})
-  for pt::Point3 in p
-
+function CH(p::AbstractVector{Point3})::AbstractVector{Point3}
+  let A::AbstractVector{Point3}
   end
+  for i = 1:length(p)
+    for j=(i+1):length(p)
+      for k=(i+1):length(p)
+        j == k && continue
+        ptsAbove(p,plane(p[i],p[j],p[k])) || push!(A,p[i],p[j],p[k])
+      end
+    end
+  end
+  return A
+end
+
+function ptsAbove(pts::AbstractVector{Point3},pl::Plane3)::Bool
+  let n = 1
+  end
+    while n < length(pts)
+      if abovePl(pts[n],pl)
+        return true
+        break
+      end
+      n += 1
+    end
+    if n == length(pts)
+      return false
+    end
 end

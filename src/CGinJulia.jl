@@ -7,6 +7,7 @@ export dot, perpdot
 export det2, det3
 export abovePl, belowPl
 export plane
+export CH, ptsAbove
 export ccw,leftturn,rightturn
 export leftAhead, rightAhead, leftOnAhead, rightOnAhead
 export leftofseg, rightofseg, leftward, rightward

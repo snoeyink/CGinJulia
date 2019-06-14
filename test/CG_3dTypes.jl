@@ -7,4 +7,8 @@
     @test abovePl(t,plane(x,y,z))
     @test !belowPl(toPoint3H(p),plane(x,y,z))
 
+    a = (1,3,3,3); b = (1,2,2,2); c = (1,2,2,4); d = (1,4,2,2); e = (1,2,4,2); f = (1,2,4,4); g = (1,4,4,2);
+
+    @test CH(a,b,c,d,e,f,g)
+
 end;
