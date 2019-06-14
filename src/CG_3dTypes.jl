@@ -1,8 +1,11 @@
+using Plots
+
 """
 Adapted from 2D Types:
 Geometric predicates for 3D Vectors, cartesian points (px,py,pz), homogeneuos points (pw,px,py,pz), and planes
     Julia can inline these.
 """
+
 Vector3 = Tuple{Real,Real,Real}
 Point3C = Tuple{Real,Real,Real}
 Plane3 = Tuple{Real,Real,Real,Real}
@@ -31,31 +34,31 @@ orientptpl((w,x,y,z)::Point3H,(pw,px,py,pz)::Plane3) = muladd(px,x,muladd(py,y,m
 abovePl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)>zero(p[1])
 belowPl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)<zero(p[1])
 
-function CH(p::AbstractVector{Point3})::AbstractVector{Point3}
-  let A::AbstractVector{Point3}
-  end
+function CH(p)
+  A = []
+  scatter3d(getindex.(p,2), getindex.(p,3), getindex.(p,4), markershape=:circle,legend=false)
   for i = 1:length(p)
     for j=(i+1):length(p)
       for k=(i+1):length(p)
-        j == k && continue
-        ptsAbove(p,plane(p[i],p[j],p[k])) || push!(A,p[i],p[j],p[k])
+        if j ≠ k
+        pln = plane(p[i],p[j],p[k])
+        if (~(all(pln.==0)) && ~(ptsAbove(p,pln)))
+          push!(A,(i,j,k)) #p[i],p[j],p[k]))
+          pts = [p[i];p[j];p[k];p[i]]
+          display(plot3d!(getindex.(pts,2), getindex.(pts,3), getindex.(pts,4), markershape=:circle))
+end
+      end
       end
     end
   end
   return A
 end
 
-function ptsAbove(pts::AbstractVector{Point3},pl::Plane3)::Bool
-  let n = 1
-  end
-    while n < length(pts)
-      if abovePl(pts[n],pl)
-        return true
-        break
-      end
+function ptsAbove(pts,pl::Plane3)
+  n = 1
+    while n <= length(pts)
+      abovePl(pts[n],pl) && return true
       n += 1
     end
-    if n == length(pts)
       return false
-    end
 end

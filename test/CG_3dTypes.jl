@@ -7,8 +7,12 @@
     @test abovePl(t,plane(x,y,z))
     @test !belowPl(toPoint3H(p),plane(x,y,z))
 
-    a = (1,3,3,3); b = (1,2,2,2); c = (1,2,2,4); d = (1,4,2,2); e = (1,2,4,2); f = (1,2,4,4); g = (1,4,4,2);
+    a = (1f0,3f0,3f0,3f0); b = (1f0,2f0,2f0,2f0); c = (1f0,2f0,2f0,4f0); d = (1f0,4f0,2f0,2f0); e = (1f0,2f0,4f0,2f0); f = (1f0,2f0,4f0,4f0); g = (1f0,4f0,4f0,2f0);
+    h = (1f0); i = (1f0);
 
-    @test CH(a,b,c,d,e,f,g)
+    pts = [Point3H(1f0, a, b, c) for a in [2f0 4f0], b in [2f0 4f0], c in [2f0 4f0]]
+
+
+    @test CH([a;b;c;d;e;f;g])
 
 end;
