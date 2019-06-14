@@ -21,12 +21,18 @@ det3(p,q,r,a,b,c)::Real = p[a]*det2(q,r,b,c) -
                           p[c]*det2(q,r,a,b)
 
 # computing homogeneous plane equations
-plane(o::Point3H,p::Point3H,q::Point3H,r::Point3H)::Plane3 = (det3(p,q,r,2,3,4),
-                                                             -det3(o,q,r,1,3,4),
-                                                             det3(o,p,r,1,2,4),
-                                                             -det3(o,p,q,1,2,3))
+plane(p::Point3H,q::Point3H,r::Point3H)::Plane3 = (det3(p,q,r,2,3,4),
+                                                  -det3(p,q,r,1,3,4),
+                                                  det3(p,q,r,1,2,4),
+                                                  -det3(p,q,r,1,2,3))
 
 orientptpl((x,y,z)::Point3C,(pw,px,py,pz)::Plane3) = orientptpl(toPoint3H(x,y,z),(pw,px,py,pz))
 orientptpl((w,x,y,z)::Point3H,(pw,px,py,pz)::Plane3) = muladd(px,x,muladd(py,y,muladd(pz,z,pw)))
 abovePl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)>zero(p[1])
 belowPl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)<zero(p[1])
+
+function CH(p::AbstractVector{Point3})
+  for pt::Point3 in p
+
+  end
+end
