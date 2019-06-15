@@ -37,16 +37,15 @@ belowPl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)<zero(p[1])
 function CH(p)
   A = []
   scatter3d(getindex.(p,2), getindex.(p,3), getindex.(p,4), markershape=:circle,legend=false)
-  for i = 1:length(p)
-    for j=(i+1):length(p)
-      for k=(i+1):length(p)
-          if j ≠ k
-          pln = plane(p[i],p[j],p[k])
+  for ptsA in p
+    for ptsB in p[1:length(p)]
+      for ptsC in p[1:length(p)]
+        (ptsC==ptsB || ptsC==ptsA || ptsB==ptsA) && continue
+          pln = plane(ptsA,ptsB,ptsC)
           if (~(all(pln.==0)) && ~(ptsAbove(p,pln)))
-            push!(A,(i,j,k)) #p[i],p[j],p[k]))
-            pts = [p[i];p[j];p[k];p[i]]
+            push!(A,ptsA,ptsB,ptsC)
+            pts = [ptsA;ptsB;ptsC;ptsA]
             display(plot3d!(getindex.(pts,2), getindex.(pts,3), getindex.(pts,4), markershape=:circle))
-          end
         end
       end
     end
