@@ -40,14 +40,14 @@ function CH(p)
   for i = 1:length(p)
     for j=(i+1):length(p)
       for k=(i+1):length(p)
-        if j ≠ k
-        pln = plane(p[i],p[j],p[k])
-        if (~(all(pln.==0)) && ~(ptsAbove(p,pln)))
-          push!(A,(i,j,k)) #p[i],p[j],p[k]))
-          pts = [p[i];p[j];p[k];p[i]]
-          display(plot3d!(getindex.(pts,2), getindex.(pts,3), getindex.(pts,4), markershape=:circle))
-end
-      end
+          if j ≠ k
+          pln = plane(p[i],p[j],p[k])
+          if (~(all(pln.==0)) && ~(ptsAbove(p,pln)))
+            push!(A,(i,j,k)) #p[i],p[j],p[k]))
+            pts = [p[i];p[j];p[k];p[i]]
+            display(plot3d!(getindex.(pts,2), getindex.(pts,3), getindex.(pts,4), markershape=:circle))
+          end
+        end
       end
     end
   end
