@@ -1,13 +1,14 @@
-using Queryverse
 """
 Creates a python file that can be run in Blender to generate a representation
 of an object created by the CGinJulia package
 """
 
 Code = String
-pts = AbstractVector{Point3}
 
-function Export()
+function Bl_Export(filename::String,p::AbstractVector{Point3},f::AbstractVector{Tuple{Real,Real,Real}})
+
+open(filename, "w")
+
 Code = 'bl_info = {
     "name": "Convex Hull Generation in Julia",
     "author": "Jackson Meade (NCSSM) and Jack Snoeyink (UNC Chapel Hill)",
@@ -28,9 +29,88 @@ from bpy_extras.object_utils import AddObjectHelper, object_data_add
 from mathutils import Vector
 
 
-def represent_object(self, context):
+def add_object(self, context):
    # scale_x = self.scale.x
    # scale_y = self.scale.y
+
+   verts = [
 '
 
+for i = 1:length(p)
+    Code += ('Vector((' + String(p[i][1]) + ',' + String(p[i][2]) + ',' + String(p[i][3]) + ')),')
+end
+
+Code += ']
+
+    edges = []
+    faces = ['
+
+for a in f
+    Code += '[' + String(a[1]) + ',' + String(a[2]) + ',' + String(a[3]) + '],'
+end
+
+Code += '
+
+    mesh = bpy.data.meshes.new(name="CGinJulia_PC_CH")
+    mesh.from_pydata(verts, edges, faces)
+    # useful for development when the mesh may be invalid.
+    # mesh.validate(verbose=True)
+    object_data_add(context, mesh, operator=self)
+
+class OBJECT_OT_represent_object(Operator, AddObjectHelper):
+    """Generate the Mesh Object from points and constructed faces"""
+    bl_idname = "mesh.represent_object"
+    bl_label = "Show Representation"
+    bl_options = {"REGISTER", "UNDO"}
+
+    """ scale: FloatVectorProperty(
+        name="scale",
+        default=(1.0, 1.0, 1.0),
+        subtype="TRANSLATION",
+        description="scaling",
+    )
+    """
+
+    def execute(self, context):
+
+        add_object(self, context)
+
+        return {"FINISHED"}
+
+
+        # Registration
+
+        def add_object_button(self, context):
+            self.layout.operator(
+                OBJECT_OT_add_object.bl_idname,
+                text="Add Object",
+                icon="SURFACE_NSPHERE")
+
+                # This allows you to right click on a button and link to the manual
+def add_object_manual_map():
+    url_manual_prefix = "https://docs.blender.org/manual/en/dev/"
+    url_manual_mapping = (
+        ("bpy.ops.mesh.add_object", "editors/3dview/object"),
+    )
+    return url_manual_prefix, url_manual_mapping
+
+    def register():
+        bpy.utils.register_class(OBJECT_OT_add_object)
+        bpy.utils.register_manual_map(add_object_manual_map)
+        bpy.types.VIEW3D_MT_mesh_add.append(add_object_button)
+
+
+    def unregister():
+        bpy.utils.unregister_class(OBJECT_OT_add_object)
+        bpy.utils.unregister_manual_map(add_object_manual_map)
+        bpy.types.VIEW3D_MT_mesh_add.remove(add_object_button)
+
+
+    if __name__ == "__main__":
+        register()
+
+'
+
+write(filename, Code)
+close(filename)
 end
