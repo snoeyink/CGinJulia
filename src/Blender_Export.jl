@@ -1,15 +1,13 @@
 """
-Creates a python file that can be run in Blender to generate a representation
+Creates a python file that can be run in Blender to generate a addation
 of an object created by the CGinJulia package
 """
 
-Code = String
+function Bl_Export(filename::String,p::AbstractVector,f::AbstractVector)
 
-function Bl_Export(filename::String,p::AbstractVector{Point3},f::AbstractVector{Tuple{Real,Real,Real}})
+io = open(filename, "w")
 
-open(filename, "w")
-
-Code = 'bl_info = {
+Code::String = """bl_info = {
     "name": "Convex Hull Generation in Julia",
     "author": "Jackson Meade (NCSSM) and Jack Snoeyink (UNC Chapel Hill)",
     "version": (1, 0),
@@ -24,32 +22,33 @@ Code = 'bl_info = {
 
 import bpy
 from bpy.types import Operator
-# from bpy.props import FloatVectorProperty
+from bpy.props import FloatVectorProperty
 from bpy_extras.object_utils import AddObjectHelper, object_data_add
 from mathutils import Vector
 
 
 def add_object(self, context):
-   # scale_x = self.scale.x
-   # scale_y = self.scale.y
+   scale_x = self.scale.x
+   scale_y = self.scale.y
 
    verts = [
-'
+"""
 
 for i = 1:length(p)
-    Code += ('Vector((' + String(p[i][1]) + ',' + String(p[i][2]) + ',' + String(p[i][3]) + ')),')
+    Code = string(Code,string("""       Vector((""",p[i][1],""",""",p[i][2],""",""",p[i][3],""")),
+    """))
 end
 
-Code += ']
+Code = string(Code,"""   ]
 
-    edges = []
-    faces = ['
+            edges = []
+            faces = [""")
 
 for a in f
-    Code += '[' + String(a[1]) + ',' + String(a[2]) + ',' + String(a[3]) + '],'
+    Code = string(Code,string("""[""",a[1],""",""",a[2],""",""",a[3],"""],"""))
 end
 
-Code += '
+Code = string(Code,"""]
 
     mesh = bpy.data.meshes.new(name="CGinJulia_PC_CH")
     mesh.from_pydata(verts, edges, faces)
@@ -57,36 +56,36 @@ Code += '
     # mesh.validate(verbose=True)
     object_data_add(context, mesh, operator=self)
 
-class OBJECT_OT_represent_object(Operator, AddObjectHelper):
-    """Generate the Mesh Object from points and constructed faces"""
-    bl_idname = "mesh.represent_object"
+class OBJECT_OT_add_object(Operator, AddObjectHelper):
+    #Generate the Mesh Object from points and constructed faces
+    bl_idname = "mesh.add_object"
     bl_label = "Show Representation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {'REGISTER', 'UNDO'}
 
-    """ scale: FloatVectorProperty(
+    scale: FloatVectorProperty(
         name="scale",
         default=(1.0, 1.0, 1.0),
-        subtype="TRANSLATION",
+        subtype='TRANSLATION',
         description="scaling",
     )
-    """
+
 
     def execute(self, context):
 
         add_object(self, context)
 
-        return {"FINISHED"}
+        return {'FINISHED'}
 
 
-        # Registration
+# Registration
 
-        def add_object_button(self, context):
-            self.layout.operator(
-                OBJECT_OT_add_object.bl_idname,
-                text="Add Object",
-                icon="SURFACE_NSPHERE")
+def add_object_button(self, context):
+    self.layout.operator(
+        OBJECT_OT_add_object.bl_idname,
+        text="Import CGinJulia Representation",
+        icon='SURFACE_NSPHERE')
 
-                # This allows you to right click on a button and link to the manual
+# This allows you to right click on a button and link to the manual
 def add_object_manual_map():
     url_manual_prefix = "https://docs.blender.org/manual/en/dev/"
     url_manual_mapping = (
@@ -94,23 +93,25 @@ def add_object_manual_map():
     )
     return url_manual_prefix, url_manual_mapping
 
-    def register():
-        bpy.utils.register_class(OBJECT_OT_add_object)
-        bpy.utils.register_manual_map(add_object_manual_map)
-        bpy.types.VIEW3D_MT_mesh_add.append(add_object_button)
+def register():
+    bpy.utils.register_class(OBJECT_OT_add_object)
+    bpy.utils.register_manual_map(add_object_manual_map)
+    bpy.types.VIEW3D_MT_mesh_add.append(add_object_button)
 
 
-    def unregister():
-        bpy.utils.unregister_class(OBJECT_OT_add_object)
-        bpy.utils.unregister_manual_map(add_object_manual_map)
-        bpy.types.VIEW3D_MT_mesh_add.remove(add_object_button)
+def unregister():
+    bpy.utils.unregister_class(OBJECT_OT_add_object)
+    bpy.utils.unregister_manual_map(add_object_manual_map)
+    bpy.types.VIEW3D_MT_mesh_add.remove(add_object_button)
 
 
-    if __name__ == "__main__":
-        register()
+if __name__ == "__main__":
+    register()
 
-'
+""")
 
-write(filename, Code)
-close(filename)
+write(io, Code)
+
+close(io)
+
 end
