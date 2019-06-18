@@ -52,7 +52,8 @@ function CH(p)
       end
     end
   end
-  Bl_Export("test1.py",A,F)
+  @info """Please input a filename without the file type (i.e. loremipsum will produce loremipsum.py):"""
+  Bl_Export(string(readline(stdin),""".py"""),A,F)
   return A
 end
 
