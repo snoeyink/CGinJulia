@@ -1,5 +1,5 @@
 """ geometric predicates for 2vectors, cartesian points (px,py), homogeneuos points (pw,px,py), lines (lw,lx,ly), and segments x[1:2],y[1:2].
-    Julia can inline these.
+	Julia can inline these.
 """
 Vector2 = Tuple{Real,Real}
 Point2C = Tuple{Real,Real}
