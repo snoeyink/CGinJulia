@@ -69,7 +69,6 @@ class OBJECT_OT_add_object(Operator, AddObjectHelper):
         description="scaling",
     )
 
-
     def execute(self, context):
 
         add_object(self, context)
@@ -85,6 +84,7 @@ def add_object_button(self, context):
         text="Import CGinJulia Representation",
         icon='SURFACE_NSPHERE')
 
+
 # This allows you to right click on a button and link to the manual
 def add_object_manual_map():
     url_manual_prefix = "https://docs.blender.org/manual/en/dev/"
@@ -92,6 +92,7 @@ def add_object_manual_map():
         ("bpy.ops.mesh.add_object", "editors/3dview/object"),
     )
     return url_manual_prefix, url_manual_mapping
+
 
 def register():
     bpy.utils.register_class(OBJECT_OT_add_object)
