@@ -1,9 +1,10 @@
 """
-Creates a python file that can be run in Blender to generate a addation
-of an object created by the CGinJulia package
-"""
+Creates a python file that can be run in Blender to generate a
+representation of an object created by the CGinJulia package
 
-function Bl_Export(filename::String,p::AbstractVector,f::AbstractVector)
+'''Bl_Export(filename::String, points::AbstractVector{Point3H}, faces::AbstractVector{Real})'''
+"""
+function Bl_Export(filename::String,points,faces)
 
 io = open(filename, "w")
 
@@ -34,8 +35,8 @@ def add_object(self, context):
 
     verts = ["""
 
-for i = 1:length(p)
-    Code = string(Code,string("""Vector((""",p[i][1],""" * scale_x""",""",""",p[i][2],""" * scale_y""",""",""",p[i][3],""" * scale_z""",""")),""","""
+for i = 1:length(points)
+    Code = string(Code,string("""Vector((""",points[i][2],""" * scale_x""",""",""",points[i][3],""" * scale_y""",""",""",points[i][4],""" * scale_z""",""")),""","""
     """))
 end
 
@@ -43,8 +44,8 @@ Code = string(Code,"""]
 ""","""    edges = []
 ""","""    faces = [""")
 
-for a in f
-    Code = string(Code,string("""[""",a[1],""",""",a[2],""",""",a[3],"""],"""))
+for a in faces
+    Code = string(Code,string("""[""",string(a[1])[2],""",""",string(a[2])[2],""",""",string(a[3])[2],"""],"""))
 end
 
 Code = string(Code,"""]
