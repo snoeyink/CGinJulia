@@ -12,10 +12,11 @@ export ccw,leftturn,rightturn
 export leftAhead, rightAhead, leftOnAhead, rightOnAhead
 export leftofseg, rightofseg, leftward, rightward
 export line, orientptln, leftof, rightof
-export Bl_Export
+export Bl_Export,Export
 
 include("CG_2dTypes.jl")
 include("CG_3dTypes.jl")
+include("Export.jl")
 include("Blender_Export.jl")
 include("Convex_Hull.jl")
 include("LA_Dets.jl")
