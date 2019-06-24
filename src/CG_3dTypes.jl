@@ -17,12 +17,6 @@ toPoint3H((x,y,z)::Point3C)::Point3H = (one(x),x,y,z)
 dot((ux,uy,uz)::Tuple{AbstractFloat,AbstractFloat,AbstractFloat},(vx,vy,vz)::Tuple{AbstractFloat,AbstractFloat,AbstractFloat}) = muladd(ux, vx, muladd(uy, vy, (uz * vz)))
 dot((ux,uy,uz)::Vector3,(vx,vy,vz)::Vector3) = muladd(ux, vx, muladd(uy, vy, (uz * vz)))
 
-# cartesian and homogeneous orientation determinants
-det2(p,q,a,b)::Real = muladd(p[a],q[b],-p[b]*q[a])
-det3(p,q,r,a,b,c)::Real = p[a]*det2(q,r,b,c) -
-							p[b]*det2(q,r,a,c) +
-							p[c]*det2(q,r,a,b)
-
 # computing homogeneous plane equations
 plane(p::Point3H,q::Point3H,r::Point3H)::Plane3 = (det3(p,q,r,2,3,4),
 													-det3(p,q,r,1,3,4),
@@ -33,40 +27,3 @@ orientptpl((x,y,z)::Point3C,(pw,px,py,pz)::Plane3) = orientptpl(toPoint3H(x,y,z)
 orientptpl((w,x,y,z)::Point3H,(pw,px,py,pz)::Plane3) = muladd(px,x,muladd(py,y,muladd(pz,z,pw)))
 abovePl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)>zero(p[1])
 belowPl(q::Point3,p::Plane3)::Bool = orientptpl(q,p)<zero(p[1])
-
-function CH(p)
- 	A = []
-	F = []
-	scatter3d(getindex.(p,2), getindex.(p,3), getindex.(p,4), markershape=:circle,legend=false)
-	for ptsA in p[1:length(p)]
-		for ptsB in p[1:length(p)]
-			for ptsC in p[1:length(p)]
-				if (ptsC≠ptsB && ptsC≠ptsA && ptsB≠ptsA)
-					pln = plane(ptsA,ptsB,ptsC)
-					if (~(all(pln.==0)) && ~(ptsAbove(p,pln)))
-						#push!(A,ptsA,ptsB,ptsC)
-						@warn string("""Points: """,ptsA,ptsB,ptsC)
-						pts = [ptsA;ptsB;ptsC;ptsA]
-						push!(F,(findall(f->f==ptsA,p),findall(f->f==ptsB,p),findall(f->f==ptsC,p)))
-						push!(A,getindex.(pts,2), getindex.(pts,3), getindex.(pts,4))
-						@info string("""Face Values: """,F)
-						display(plot3d!(getindex.(pts,2), getindex.(pts,3), getindex.(pts,4), markershape=:circle))
-					end
-				end
-			end
-		end
-	end
-	@warn string("""The length of the vertices array is: """,length(p))
-	@info """Please input a filename without the file type (i.e. loremipsum will produce loremipsum.py):"""
-	Bl_Export(string(readline(stdin),""".py"""),p,F)
-	return A
-end
-
-function ptsAbove(pts,pl::Plane3)
-	n = 1
-	while n <= length(pts)
-		abovePl(pts[n],pl) && return true
-		n += 1
-	end
-		return false
-end

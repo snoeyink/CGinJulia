@@ -17,5 +17,7 @@ export Bl_Export
 include("CG_2dTypes.jl")
 include("CG_3dTypes.jl")
 include("Blender_Export.jl")
+include("Convex_Hull.jl")
+include("LA_Dets.jl")
 
 end  # module CGinJulia
