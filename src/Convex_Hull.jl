@@ -22,7 +22,7 @@ function CH(p)
 	end
 	@warn string("""The length of the vertices array is: """,length(p))
 	@info """Please input a filename without the file type (i.e. loremipsum will produce loremipsum.py):"""
-	Bl_Export(string(readline(stdin),""".py"""),p,F)
+	Export("Blender",[string(readline(stdin),""".py"""),p,F])
 	return A
 end
 
