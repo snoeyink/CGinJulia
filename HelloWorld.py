@@ -23,9 +23,9 @@ def add_object(self, context):
     scale_y = self.scale.y
     scale_z = self.scale.z
 
-    verts = [Vector((54.97292 * scale_x,0.57641745 * scale_y,34.022434 * scale_z)),Vector((7.288041 * scale_x,52.51858 * scale_y,16.401844 * scale_z)),Vector((10.767138 * scale_x,20.911818 * scale_y,52.097813 * scale_z)),Vector((9.538636 * scale_x,58.115696 * scale_y,6.019535 * scale_z)),Vector((45.8011 * scale_x,29.427223 * scale_y,3.659141 * scale_z)),Vector((55.36548 * scale_x,22.592525 * scale_y,20.070827 * scale_z)),]
+    verts = [Vector((84 * scale_x,43 * scale_y,70 * scale_z)),Vector((23 * scale_x,42 * scale_y,30 * scale_z)),Vector((57 * scale_x,45 * scale_y,45 * scale_z)),Vector((44 * scale_x,64 * scale_y,76 * scale_z)),Vector((90 * scale_x,67 * scale_y,64 * scale_z)),Vector((63 * scale_x,88 * scale_y,23 * scale_z)),Vector((64 * scale_x,87 * scale_y,54 * scale_z)),Vector((7 * scale_x,75 * scale_y,63 * scale_z)),Vector((13 * scale_x,67 * scale_y,80 * scale_z)),Vector((97 * scale_x,7 * scale_y,50 * scale_z)),Vector((78 * scale_x,43 * scale_y,12 * scale_z)),Vector((38 * scale_x,62 * scale_y,8 * scale_z)),Vector((82 * scale_x,76 * scale_y,13 * scale_z)),Vector((34 * scale_x,27 * scale_y,15 * scale_z)),Vector((22 * scale_x,33 * scale_y,67 * scale_z)),Vector((99 * scale_x,41 * scale_y,98 * scale_z)),Vector((51 * scale_x,19 * scale_y,63 * scale_z)),Vector((88 * scale_x,10 * scale_y,42 * scale_z)),Vector((55 * scale_x,49 * scale_y,60 * scale_z)),Vector((92 * scale_x,57 * scale_y,12 * scale_z)),Vector((88 * scale_x,50 * scale_y,34 * scale_z)),Vector((30 * scale_x,23 * scale_y,54 * scale_z)),Vector((100 * scale_x,24 * scale_y,73 * scale_z)),]
     edges = []
-    faces = [[1,3,6],[2,3,4],[3,4,2],[3,6,1],[5,3,1],[6,1,3],[6,3,2],]
+    faces = [[1,7,14],[1,11,7],[1,13,11],[1,14,13],[4,6,12],[4,12,19],[4,15,6],[4,19,15],[5,6,7],[5,7,11],[5,11,12],[5,12,6],[6,8,7],[6,15,8],[7,8,14],[8,15,14],[9,10,17],[9,15,22],[9,16,15],[9,17,21],[9,19,10],[9,21,16],[9,22,19],[10,11,13],[10,13,17],[10,19,11],[11,19,12],[13,14,21],[13,21,17],[14,15,16],[14,16,21],[15,19,22],]
     mesh = bpy.data.meshes.new(name="Convex Hull of HelloWorld.py")
     mesh.from_pydata(verts, edges, faces)
     # useful for development when the mesh may be invalid.

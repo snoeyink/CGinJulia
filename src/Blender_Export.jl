@@ -45,7 +45,7 @@ Code = string(Code,"""]
 ""","""    faces = [""")
 
 for a in faces
-    Code = string(Code,string("""[""",chop(string(a[1]),head=1,tail=1),""",""",chop(string(a[2]),head=1,tail=1),""",""",chop(string(a[3]),head=1,tail=1),"""],"""))
+    Code = string(Code,string("""[""",string(a[1]),""",""",string(a[2]),""",""",string(a[3]),"""],"""))
 end
 
 Code = string(Code,"""]
