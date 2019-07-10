@@ -13,9 +13,9 @@ Point3L = Tuple{Real,Real,Real,Real,Real} # last cord is lift
 Sphere3 = Tuple{Real,Real,Real,Real,Real} # x,y,z,q
 
 toPoint3H((x,y,z)::Point3C)::Point3H = (one(x),x,y,z)
-lift(x::Float32,y::Float32,z::Float32)::Point3L = (one(x),x,y,z,muladd(widen(z),widen(z), muladd(widen(y),widen(y), widemul(x,x))) ) # promote to double
-lift((x,y,z)::Point3C)::Point3L = (one(x),x,y,z, muladd(z,z, muladd(y,y, x*x)) ) # promote to double
-
+lift(x::Float32,y::Float32,z::Float32)::Point3L = (x,y,z,muladd(widen(z),widen(z), muladd(widen(y),widen(y), widemul(x,x))) ) # promote to double
+lift((x,y,z)::Point3C)::Point3L = (x,y,z, muladd(z,z, muladd(y,y, x*x)) ) # promote to double
+lift(a::Array{<:Real,1}) = (a[1], a[2], a[3], sum(a.*widen.(a)))
 dot(u,v) = sum(u.*v)
 # cartesian and homogeneous orientation determinants
 
