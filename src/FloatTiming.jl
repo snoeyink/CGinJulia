@@ -18,22 +18,40 @@ det2wm(p,q, a,b) = muladd(p[a],q[b], -widemult(p[b],q[a])) # 2 mult, add, neg
 @inline det2wi(p,q, a,b) = @inbounds widemult(p[a],q[b]) - widemult(p[b],q[a]) # 2 mult, add, neg
 @inline det2mi(p,q, a,b) = @inbounds muladd(p[a],q[b], -widemult(p[b],q[a])) # 2 mult, add, neg
 
-function test(alg,pts)
-	y = @MVector [alg(pts[1],pts[2],1,2), alg(pts[1],pts[2],1,3), alg(pts[1],pts[2],2,3)]
-	for p in pts, q in pts
-		y[1] += alg(p,q,1,2)
-		y[2] += alg(p,q,1,3)
-		y[3] += alg(p,q,2,3)
+function test(alg,pts, y)
+	for p in pts
+		for q in pts
+			@inbounds	y[1] += alg(p,q,1,2)
+			@inbounds	y[2] += alg(p,q,1,3)
+			@inbounds	y[3] += alg(p,q,2,3)
+		end
 	end
 	y
 end
 
-det2algs = [det2, det2f, det2w, det2wm, det2i,det2fi,det2wi,det2mi]
-pts = [rand(Float32,3) for i in 1:20]
-
-for alg in det2algs
-	@time test(alg, pts)
+function test(pts)
+	println(size(pts))
+	for alg in det2algs
+		y = @MVector [alg(pts[1],pts[2],1,2), alg(pts[1],pts[2],1,3), alg(pts[1],pts[2],2,3)]
+		test(alg, pts[1:2], y) # make sure it compiles first
+		@time test(alg, pts, y)
+	end
 end
+
+det2algs = [det2, det2f, det2w, det2wm, det2i,det2fi,det2wi,det2mi]
+println("Float32")
+pts = [rand(Float32,3) for i in 1:10_000]
+test(pts)
+
+#using InteractiveUtils
+#@code_warntype test(det2, pts[1:2], y)
+println("Double32")
+test(map(p->Double32.(p), pts[1:1000]))
+
+println("Int32")
+pts = [rand(Int32,3) for i in 1:10_000]
+test(pts)
+
 
 det3(p,q,r, a,b,c) = muladd(p[a], det2(q,r,b,c), # 9 mult, 5 add, 3 neg,
 					 muladd(p[b], det2(r,q,a,c),
