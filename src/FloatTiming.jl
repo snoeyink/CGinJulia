@@ -10,6 +10,7 @@ widemult(a, b) = widemul(a,b)
 2x2 same precision
 """
 det2(p,q, a,b) = (p[a]*q[b]) - (p[b]*q[a])
+@inline det2d(p,q, a,b) = (p[a]*(q[b]-p[b])) - (p[b]*(q[a]-p[a])) # more accurate for nearby soints.
 det2f(p,q, a,b) = muladd(p[a],q[b], -(p[b]*q[a]))
 det2w(p,q, a,b) = widemult(p[a],q[b]) - widemult(p[b],q[a]) # 2 mult, add, neg
 det2wm(p,q, a,b) = muladd(p[a],q[b], -widemult(p[b],q[a])) # 2 mult, add, neg
@@ -29,6 +30,36 @@ function test(alg,pts, y)
 	y
 end
 
+function check(pts)
+	for i in 1:length(pts)
+		for j in i+1:length(pts)
+			d1 = det2d(pts[i],pts[j], 1,2)
+			d2 = det2w(pts[i],pts[j], 1,2)
+			delta = sign(d1) - sign(d2)
+			if delta ≠ zero(delta)
+			 	println((i,j, delta, d1, d2, d1-d2) )
+			end
+		end
+	end
+end
+
+function baddets(pts)
+	ind = Int64[]
+	for i in 1:length(pts)
+		for j in i+1:length(pts)
+			d1 = det2d(pts[i],pts[j], 1,2)
+			d2 = det2w(pts[i],pts[j], 1,2)
+			delta = sign(d1) - sign(d2)
+			if delta ≠ zero(delta)
+				# println((i,j, delta, d1, d2, d1-d2) )
+				push!(ind, i)
+				push!(ind, j)
+			end
+		end
+	end
+	unique!(ind)
+end
+
 function test(pts)
 	println(size(pts))
 	for alg in det2algs
@@ -40,17 +71,22 @@ end
 
 det2algs = [det2, det2f, det2w, det2wm, det2i,det2fi,det2wi,det2mi]
 println("Float32")
-pts = [rand(Float32,3) for i in 1:10_000]
-test(pts)
+pts = [rand(Float32,3).+1.0f0 for i in 1:100_000]
+#test(pts)
+pt = pts[baddets(pts)]
+check(pt)
 
 #using InteractiveUtils
 #@code_warntype test(det2, pts[1:2], y)
 println("Double32")
-test(map(p->Double32.(p), pts[1:1000]))
+ptd = map(p->Double32.(p), pts[1:1000])
+#test(ptd)
+#check(ptd)
 
 println("Int32")
-pts = [rand(Int32,3) for i in 1:10_000]
-test(pts)
+pti = [rand(Int32,3) for i in 1:10_000]
+#test(pti)
+#check(pti)
 
 
 det3(p,q,r, a,b,c) = muladd(p[a], det2(q,r,b,c), # 9 mult, 5 add, 3 neg,
@@ -69,7 +105,10 @@ det4(p,q,r,s, a,b,c,d) = Double64(det2(p,q, a,b))*Double64(det2(r,s, c,d)) - # 3
 						 Double64(det2(p,q, b,d))*Double64(det2(r,s, a,c)) +
 						 Double64(det2(p,q, c,d))*Double64(det2(r,s, a,b))
 
-Plucker3L(p,q) = (q.-p, det2(p,q, 1,2), det2(p,q, 1,3), det2(p,q, 1,4), det2(p,q, 2,3), det2(p,q, 2,4), det(p,q, 3,4))
+
+function Plucker3L(p,q)
+	diff = q.-p
+	(q.-p, det2(p,d, 1,2), det2(p,d, 1,3), det2(p,d, 1,4), det2(p,d, 2,3), det2(p,d, 2,4), det2(p,d, 3,4))
 
 det4dbl(p,q,r,s, a,b,c,d) = muladd(det2(p,q, a,b), det2(r,s, c,d), # 30 mult, 17 add, 12 neg
 						 muladd(det2(p,q, c,a), det2(r,s, b,d),

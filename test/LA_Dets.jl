@@ -22,4 +22,5 @@ end
 	@test(det3(r,s,t, 1,2,3) == -3)
 	@test(det4(r,s,t,u, 1,2,3,4) == -2160)
 	@test(det4(r,s,t,u, 1,2,3,4) == det4ck(r,s,t,u, 1,2,3,4))
+	@test(det4(r,s,t,u, 1,2,3,4) == det4dbl(r,s,t,u, 1,2,3,4))
 end
